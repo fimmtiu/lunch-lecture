@@ -6,4 +6,4 @@
   (let [game (make-game)]
     (while (not (winner game))
       (play-round game))
-    (println "Game over! " (winner game) " wins.")))
+    (println "Game over!" (winner game) "wins.")))

@@ -28,12 +28,12 @@
 
 (defn take-player-turn [player]
   (println (:name player) "'s turn.")
-  (println "Your hand:" (:hand player))
+  (println "Hand:" (:hand player))
   (if (take-another-card?)
     (let* [player (assoc player :hand (conj (:hand player) (draw-card)))
            status (if (<= (apply min (hand-values player)) 21) :alive :dead)]
-      (println "You drew this card:" (peek (:hand player)))
+      (println (:name player) "drew this card:" (peek (:hand player)))
       (if (= status :dead)
-        (println "You're totally busted."))
+        (println (:name player) "is totally busted."))
       (assoc player :status status))
     player))

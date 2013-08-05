@@ -1,7 +1,7 @@
 (ns blackjack.deck
   (:use clojure.math.combinatorics))
 
-;; REPL demo, next 3 expressions
+;; REPL demo
 ;; Do (use 'clojure.math.combinatorics) first
 
 (defn- make-deck []
@@ -17,3 +17,10 @@
 
 (defn cards-left []
   (count @deck))
+
+(defn get-card-values [card]
+  (let [val (second card)]
+    (cond
+     (= val 1)  [1 11]
+     (> val 10) [10]
+     :else      [val])))

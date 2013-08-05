@@ -1,4 +1,4 @@
-(ns blackjack.core
+(ns blackjack.game
   (:gen-class))
 
 (defn -main [& args]

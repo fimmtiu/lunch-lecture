@@ -14,3 +14,6 @@
   (let [card (peek @deck)]
     (reset! deck (pop @deck))
     card))
+
+(defn cards-left []
+  (count @deck))

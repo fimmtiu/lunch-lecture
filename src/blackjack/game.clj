@@ -1,23 +1,57 @@
 (ns blackjack.game
-  (:use clojure.math.combinatorics))
+  (:use blackjack.player blackjack.deck))
 
-(defrecord Game [deck players])
+(def players (atom [(make-player "Player 1" :human [(draw-card) (draw-card)])
+                    (make-player "Player 2" :human [(draw-card) (draw-card)])]))
 
-;; REPL demo, next 3 expressions
-;; Do (use 'clojure.math.combinatorics) first
+(defn- highest-scoring-players [player-list]
+  (let [high-score (last (sort (map best-hand-value player-list)))]
+    (filter #(= high-score (best-hand-value %1)) player-list)))
 
-(def card-suits [:spades :hearts :diamonds :clubs])
-(def card-values (range 1 14))
+(defn- keep-going? [deck-size]
+  (let [live-players (filter player-alive? @players)]
+    (condp = (count live-players)
+      0  (println "It's a draw! Everyone died.")
+      1  (println "The winner is:" (:name (first live-players)))
+      (if (= deck-size (cards-left))
+        (let [winners (highest-scoring-players live-players)]
+          (if (> (count winners) 1)
+            (println "It's a draw!")
+            (println "The winner is:" (:name (first winners)))))
+        true))))
 
-(defn- make-deck []
-  (shuffle (cartesian-product card-suits card-values)))
+(defn- play-round [processed-players remaining-players]
+  (if (empty? remaining-players)
+    (reset! players processed-players)
+    (let [player (take-player-turn (first remaining-players))]
+      (recur (conj processed-players player) (rest remaining-players)))))
 
-(defn make-game []
-  (->Game (make-deck) []))   ;; we'll add players shortly
+(defn -main []
+  (let [initial-deck-size (cards-left)]
+    (play-round [] @players)
+    (if (keep-going? initial-deck-size)
+      (recur))))
 
-(defn play-round [game]
-  )
-
-(defn winner [game]
-  nil)
-
+;; Ruby version:
+;;
+;; # Plays one round. Returns false if the game is over.
+;; def play_round
+;;   cards_taken = 0
+;;   @players.select {|p| p.status == :alive }.each do |p|
+;;     if p.take_another_card?
+;;       p.hand << @deck.pop
+;;       cards_taken += 1
+;;       if p.hand_values.min > 21
+;;         p.status = :dead
+;;       end
+;;       return false if @players.select {|p| p.status == :alive }.count <= 1
+;;     end
+;;   end
+;;   return cards_taken > 0
+;; end
+;;
+;; 4 kinds of mutating state here:
+;;  - Number of cards taken in a round
+;;  - Player status
+;;  - Popping the deck
+;;  - Changing the player's hand

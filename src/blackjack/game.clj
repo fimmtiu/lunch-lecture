@@ -31,27 +31,3 @@
     (play-round [] @players)
     (if (keep-going? initial-deck-size)
       (recur))))
-
-;; Ruby version:
-;;
-;; # Plays one round. Returns false if the game is over.
-;; def play_round
-;;   cards_taken = 0
-;;   @players.select {|p| p.status == :alive }.each do |p|
-;;     if p.take_another_card?
-;;       p.hand << @deck.pop
-;;       cards_taken += 1
-;;       if p.hand_values.min > 21
-;;         p.status = :dead
-;;       end
-;;       return false if @players.select {|p| p.status == :alive }.count <= 1
-;;     end
-;;   end
-;;   return cards_taken > 0
-;; end
-;;
-;; 4 kinds of mutating state here:
-;;  - Number of cards taken in a round
-;;  - Player status
-;;  - Popping the deck
-;;  - Changing the player's hand

@@ -11,12 +11,6 @@
 (defn player-alive? [player]
   (= :alive (:status player)))
 
-(defn- take-another-card? []
-  (print "Do you want another card? > ")
-  (flush)
-  (let [input (read-line)]
-    (= "y" (lower-case (first input)))))
-
 ;; You can test this on the REPL with:
 ;;    (def p (->Player "some guy" :hi ['(:spades 1) '(:hearts 12)]))
 
@@ -26,10 +20,16 @@
 (defn best-hand-value [player]
   (apply max (filter #(<= %1 21) (hand-values player))))
 
+(defn- take-another-card? []
+  (print "Do you want another card? > ")
+  (flush)
+  (let [input (read-line)]
+    (= "y" (lower-case (first input)))))
+
 (defn take-player-turn [player]
   (println (:name player) "'s turn.")
   (println "Your hand:" (:hand player))
-  (if (take-another-card? player)
+  (if (take-another-card?)
     (let* [player (assoc player :hand (conj (:hand player) (draw-card)))
            status (if (<= (apply min (hand-values player)) 21) :alive :dead)]
       (println "You drew this card:" (peek (:hand player)))

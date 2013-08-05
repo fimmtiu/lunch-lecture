@@ -11,18 +11,11 @@
 (defn player-alive? [player]
   (= :alive (:status player)))
 
-(defn take-another-card? [player]
+(defn- take-another-card? []
   (print "Do you want another card? > ")
   (flush)
   (let [input (read-line)]
     (= "y" (lower-case (first input)))))
-
-(defn- get-card-values [card]
-  (let [val (second card)]
-    (cond
-     (= val 1)  [1 11]
-     (> val 10) [10]
-     :else      [val])))
 
 ;; You can test this on the REPL with:
 ;;    (def p (->Player "some guy" :hi ['(:spades 1) '(:hearts 12)]))

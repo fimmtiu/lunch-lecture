@@ -21,11 +21,13 @@
         true))))
 
 (defn- play-round []
-  (let [new-player-states (map take-player-turn @players)]
-    (reset! players new-player-states)))
+  (let [workers (map take-async-turn @players)]
+    (apply await workers)
+    (reset! players (map deref workers))))
 
 (defn -main []
   (let [initial-deck-size (cards-left)]
     (play-round)
     (if (keep-going? initial-deck-size)
-      (recur))))
+      (recur)
+      (shutdown-agents))))

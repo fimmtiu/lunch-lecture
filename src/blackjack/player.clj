@@ -3,10 +3,10 @@
   (:use [clojure.string :only [lower-case]])
   (:use clojure.math.combinatorics))
 
-(defrecord Player [name type status hand])
+(defrecord Player [name type status hand agent])
 
 (defn make-player [name type hand]
-  (->Player name type :alive hand))
+  (->Player name type :alive hand (agent nil)))
 
 (defn player-alive? [player]
   (= :alive (:status player)))
@@ -37,7 +37,7 @@
     (do (println (:name player) "wants another card.")
         true)))
 
-(defn take-player-turn [player]
+(defn take-player-turn [_ player]
   (println (:name player) "'s turn.")
   (println "Hand:" (:hand player))
   (if (take-another-card? player)
@@ -48,3 +48,6 @@
         (println (:name player) "is totally busted."))
       (assoc player :status status))
     player))
+
+(defn take-async-turn [player]
+  (send-off (:agent player) take-player-turn player))

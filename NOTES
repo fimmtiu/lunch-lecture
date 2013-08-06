@@ -1,0 +1,89 @@
+1. Check out step-0-beginning on the projector.
+  Talking points:
+    * lein == rake
+    * gen-class == main in C
+
+2. Check out step-1-game on the laptop.
+
+3. Add src/blackjack/deck.clj from step 1. (It'll never get modified in
+subsequent steps.)
+  Talking points:
+    * REPL demo for make-deck: interactive debugging FTW!
+    * Atoms: atomically updated variables
+      * only one of several ways to manage data concurrently: thread-local vars,
+        transactions, futures.
+
+4. game.clj: Add use stmt + stubs for play-round, keep-going?, and -main.
+
+5. Check out step-2-players on the laptop. (diff step-1-game step-2-players)
+
+6. Write player.clj.
+  Talking points:
+    * Records == structs, act like hashes
+    * take-player-turn: Instead of updating existing data, we create new
+      copies of the data and return them. Copies share structure, so this
+      is pretty cheap.
+
+7. Add loads of shit to game.clj.
+  Talking points:
+    * Removing mutable state from the rules (see below)
+    * 'recur' as a replacement for mutating local variables
+    * Building up a replacement for the current state and then atomically swapping
+
+8. Check out step-3-ai. (git diff step-2-players step-3-ai)
+
+9. Make AI additions to player.clj.
+  Talking points:
+    * Multimethods: Specialize on *anything*, not just the class of one argument
+
+10. Check out step-4-async. (git diff step-3-ai step-4-async)
+
+11. Make async additions to player.clj.
+  Talking points:
+    * Scenario: Multiplayer, everyone on their own terminal
+    * Don't worry, it's expected to look like shit right now
+    * Futures! A tool for managing concurrency complexity -- complicated
+      thread pool stuff gets reduced to functions and values.
+
+
+
+Rules:
+  For each player:
+    They can choose to take a card from the deck and add it to their hand.
+    If that card puts the minimum value of their hand over 21, they're dead.
+  If everyone's dead, it's a draw.
+  If only one player is left, they win.
+  If no player chose to draw a card, then whomever has the highest hand
+    value <= 21 wins.
+
+4 kinds of mutating state here:
+  - How many players took cards this round?
+  - Player status: alive or dead?
+  - Removing a card from the deck
+  - Adding the new card to the player's hand
+
+
+
+
+
+
+
+
+;; Ruby version:
+;;
+;; # Plays one round. Returns false if the game is over.
+;; def play_round
+;;   cards_taken = 0
+;;   @players.select {|p| p.status == :alive }.each do |p|
+;;     if p.take_another_card?
+;;       p.hand << @deck.pop
+;;       cards_taken += 1
+;;       if p.hand_values.min > 21
+;;         p.status = :dead
+;;       end
+;;     end
+;;   end
+;;   return cards_taken > 0
+;; end
+;;
+

@@ -20,16 +20,25 @@
 (defn best-hand-value [player]
   (apply max (filter #(<= %1 21) (hand-values player))))
 
-(defn- take-another-card? []
+(defmulti take-another-card? #(:type %1))
+
+(defmethod take-another-card? :human [player]
   (print "Do you want another card? > ")
   (flush)
   (let [input (read-line)]
     (= "y" (lower-case (first input)))))
 
+(defmethod take-another-card? :ai [player]
+  (if (>= (apply max (hand-values player)) 17)
+    (do (println (:name player) "doesn't want another card.")
+        false)
+    (do (println (:name player) "wants another card.")
+        true)))
+
 (defn take-player-turn [player]
   (println (:name player) "'s turn.")
   (println "Hand:" (:hand player))
-  (if (take-another-card?)
+  (if (take-another-card? player)
     (let* [player (assoc player :hand (conj (:hand player) (draw-card)))
            status (if (<= (apply min (hand-values player)) 21) :alive :dead)]
       (println (:name player) "drew this card:" (peek (:hand player)))

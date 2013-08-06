@@ -2,7 +2,7 @@
   (:use blackjack.player blackjack.deck))
 
 (def players (atom [(make-player "Player 1" :human [(draw-card) (draw-card)])
-                    (make-player "Player 2" :human [(draw-card) (draw-card)])]))
+                    (make-player "Player 2" :ai [(draw-card) (draw-card)])]))
 
 (defn- highest-scoring-players [player-list]
   (let [high-score (last (sort (map best-hand-value player-list)))]

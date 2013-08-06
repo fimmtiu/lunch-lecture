@@ -26,7 +26,9 @@
   (print "Do you want another card? > ")
   (flush)
   (let [input (read-line)]
-    (= "y" (lower-case (first input)))))
+    (if (= 0 (count input))
+      (recur player)
+      (= "y" (lower-case (first input))))))
 
 (defmethod take-another-card? :ai [player]
   (if (>= (apply max (hand-values player)) 17)

@@ -20,14 +20,12 @@
             (println "The winner is:" (:name (first winners)))))
         true))))
 
-(defn- play-round [processed-players remaining-players]
-  (if (empty? remaining-players)
-    (reset! players processed-players)
-    (let [player (take-player-turn (first remaining-players))]
-      (recur (conj processed-players player) (rest remaining-players)))))
+(defn- play-round []
+  (let [new-player-states (map take-player-turn @players)]
+    (reset! players new-player-states)))
 
 (defn -main []
   (let [initial-deck-size (cards-left)]
-    (play-round [] @players)
+    (play-round)
     (if (keep-going? initial-deck-size)
       (recur))))

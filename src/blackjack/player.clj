@@ -31,7 +31,7 @@
       (= "y" (lower-case (first input))))))
 
 (defmethod take-another-card? :ai [player]
-  (if (>= (apply max (hand-values player)) 17)
+  (if (>= (best-hand-value player) 17)
     (do (println (:name player) "doesn't want another card.")
         false)
     (do (println (:name player) "wants another card.")

@@ -1,7 +1,3 @@
--1. Setup
-  (set-frame-font "DejaVu Sans Mono-12")
-  (global-set-key (kbd "M-`") 'other-frame)
-
 0. Clojure basics
   * Lisp on the JVM
     * Lisp basics: prefix notation, get used to the parentheses.

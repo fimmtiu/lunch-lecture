@@ -11,9 +11,6 @@
 (defn player-alive? [player]
   (= :alive (:status player)))
 
-;; You can test this on the REPL with:
-;;    (def p (->Player "some guy" :hi ['(:spades 1) '(:hearts 12)]))
-
 (defn hand-values [player]
   (map #(reduce + %1) (apply cartesian-product (map get-card-values (:hand player)))))
 

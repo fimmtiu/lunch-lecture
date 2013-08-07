@@ -1,3 +1,13 @@
+0. Clojure basics
+  * Lisp on the JVM
+    * Lisp basics: prefix notation, get used to the parentheses.
+  * Designed to make concurrency easy
+  * Almost completely immutable
+    * Except in very special circumstances, you can't change the value of a
+      variable or the contents of a data structure once you set them.
+    * Totally sweet for concurrency, because concurrent modification becomes
+      less of an issue.
+
 1. Check out step-0-beginning on the projector.
   Talking points:
     * lein == rake

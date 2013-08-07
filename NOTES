@@ -22,6 +22,9 @@ subsequent steps.)
     * Atoms: atomically updated variables
       * only one of several ways to manage data concurrently: thread-local vars,
         transactions, futures.
+  Demo:
+    * make-deck
+    * draw-card
 
 4. game.clj: Add use stmt + stubs for play-round, keep-going?, and -main.
 
@@ -30,21 +33,30 @@ subsequent steps.)
 6. Write player.clj.
   Talking points:
     * Records == structs, act like hashes
+    * 'recur' as a replacement for mutating local variables
     * take-player-turn: Instead of updating existing data, we create new
       copies of the data and return them. Copies share structure, so this
       is pretty cheap.
+  Demo:
+    * (def p (make-player "some guy" :human ['(:spades 1) '(:hearts 12)]))
+    * hand-values (build it up)
+    * The whole thing
 
 7. Add loads of shit to game.clj.
   Talking points:
     * Removing mutable state from the rules (see below)
-    * 'recur' as a replacement for mutating local variables
     * Building up a replacement for the current state and then atomically swapping
+  Demo:
+    * The whole thing
 
 8. Check out step-3-ai. (git diff step-2-players step-3-ai)
 
 9. Make AI additions to player.clj.
   Talking points:
     * Multimethods: Specialize on *anything*, not just the class of one argument
+  Demo:
+    * take-another-card? with both human and ai players.
+    * The whole thing
 
 10. Check out step-4-async. (git diff step-3-ai step-4-async)
 
@@ -54,6 +66,8 @@ subsequent steps.)
     * Don't worry, it's expected to look like shit right now
     * Futures! A tool for managing concurrency complexity -- complicated
       thread pool stuff gets reduced to functions and values.
+  Demo:
+    * The whole thing
 
 
 
@@ -72,6 +86,9 @@ Rules:
   - Removing a card from the deck
   - Adding the new card to the player's hand
 
+(Not exactly like proper blackjack, since if there's only one player left, they
+should automatically win without being asked if they want to draw, but too bad.
+Doing it this way makes the async stuff simpler.)
 
 
 
